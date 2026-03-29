@@ -1,0 +1,918 @@
+﻿<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>SLV PG – Ladies Only Paying Guest</title>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,700;0,900;1,400&family=DM+Sans:wght@300;400;500;600&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+<style>
+  :root {
+    --rose: #2563eb;
+    --rose-light: #3b82f6;
+    --rose-dark: #1d4ed8;
+    --blush: rgba(37, 99, 235, 0.05);
+    --cream: #f8fafc;
+    --gold: #0891b2;
+    --gold-light: #67e8f9;
+    --dark: #0f172a;
+    --text: #1e293b;
+    --muted: #64748b;
+    --white: #ffffff;
+    --glass: rgba(255, 255, 255, 0.75);
+    --glass-border: rgba(255, 255, 255, 0.3);
+    --shadow: 0 8px 30px rgba(0, 0, 0, 0.04);
+    --shadow-lg: 0 20px 40px rgba(0, 0, 0, 0.08);
+  }
+
+  *, *::before, *::after { margin:0; padding:0; box-sizing:border-box; }
+
+  html { scroll-behavior: smooth; }
+
+  body {
+    font-family: 'DM Sans', sans-serif;
+    background: var(--cream);
+    color: var(--text);
+    overflow-x: hidden;
+  }
+
+  /* ───── FLOATING BUTTONS ───── */
+  .float-btns {
+    position: fixed;
+    right: 22px;
+    bottom: 30px;
+    display: flex;
+    flex-direction: column;
+    gap: 14px;
+    z-index: 999;
+  }
+  .float-btn {
+    width: 56px; height: 56px;
+    border-radius: 50%;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 1.5rem;
+    color: var(--white);
+    text-decoration: none;
+    box-shadow: 0 4px 20px rgba(0,0,0,0.2);
+    transition: transform 0.2s, box-shadow 0.2s;
+  }
+  .float-btn:hover { transform: scale(1.1); box-shadow: 0 8px 28px rgba(0,0,0,0.25); }
+  .float-wa { background: #25D366; }
+  .float-call { background: var(--rose); }
+
+  /* ───── NAV ───── */
+  nav {
+    position: fixed; top: 0; width: 100%; z-index: 100;
+    background: var(--glass);
+    backdrop-filter: blur(16px);
+    -webkit-backdrop-filter: blur(16px);
+    border-bottom: 1px solid var(--glass-border);
+    padding: 1rem 5%;
+    display: flex; align-items: center; justify-content: space-between;
+    transition: all 0.3s ease;
+  }
+  nav.scrolled { background: rgba(255,255,255,0.9); box-shadow: var(--shadow); padding: 0.8rem 5%; }
+  .logo {
+    font-family: 'Playfair Display', serif;
+    font-size: 1.55rem;
+    font-weight: 900;
+    color: var(--rose);
+    letter-spacing: -0.5px;
+  }
+  .logo span { color: var(--gold); }
+  .nav-links { display: flex; gap: 28px; list-style: none; }
+  .nav-links a {
+    text-decoration: none;
+    color: var(--text);
+    font-size: 0.88rem;
+    font-weight: 500;
+    letter-spacing: 0.3px;
+    transition: color 0.2s;
+  }
+  .nav-links a:hover { color: var(--rose); }
+  .nav-cta {
+    background: var(--rose);
+    color: var(--white) !important;
+    padding: 9px 22px;
+    border-radius: 50px;
+    font-weight: 600 !important;
+    transition: background 0.2s !important;
+  }
+  .nav-cta:hover { background: var(--rose-dark) !important; color: var(--white) !important; }
+  .hamburger { display: none; font-size: 1.4rem; cursor: pointer; color: var(--rose); }
+  .mobile-menu {
+    display: none;
+    position: fixed; top: 62px; left: 0; right: 0;
+    background: var(--cream);
+    border-bottom: 2px solid var(--blush);
+    padding: 20px 5%;
+    flex-direction: column; gap: 16px;
+    z-index: 99;
+  }
+  .mobile-menu.open { display: flex; }
+  .mobile-menu a { color: var(--text); text-decoration: none; font-weight: 500; font-size: 1rem; }
+
+  /* ───── HERO ───── */
+  .hero {
+    min-height: 80vh;
+    background: linear-gradient(135deg, #f0f7ff 0%, #eff6ff 40%, #f0fdfa 100%);
+    display: flex; align-items: center;
+    padding: 110px 5% 50px;
+    position: relative;
+    overflow: hidden;
+  }
+  .hero::before {
+    content: '';
+    position: absolute; top: -80px; right: -80px;
+    width: 520px; height: 520px;
+    background: radial-gradient(circle, rgba(37,99,235,0.10) 0%, transparent 70%);
+    border-radius: 50%;
+  }
+  .hero::after {
+    content: '';
+    position: absolute; bottom: -100px; left: -60px;
+    width: 400px; height: 400px;
+    background: radial-gradient(circle, rgba(8,145,178,0.10) 0%, transparent 70%);
+    border-radius: 50%;
+  }
+  .hero-inner {
+    max-width: 1200px; margin: 0 auto;
+    display: grid; grid-template-columns: 1fr 1fr;
+    gap: 60px; align-items: center; width: 100%;
+  }
+  .hero-badge {
+    display: inline-flex; align-items: center; gap: 8px;
+    background: var(--blush);
+    border: 1px solid rgba(232,66,106,0.2);
+    color: var(--rose);
+    font-size: 0.78rem; font-weight: 600;
+    padding: 6px 16px; border-radius: 50px;
+    margin-bottom: 22px;
+    letter-spacing: 0.5px;
+    text-transform: uppercase;
+  }
+  .hero h1 {
+    font-family: 'Playfair Display', serif;
+    font-size: clamp(2.4rem, 5vw, 3.8rem);
+    font-weight: 900; line-height: 1.15;
+    color: var(--dark);
+    margin-bottom: 20px;
+  }
+  .hero h1 .accent { color: var(--rose); font-style: italic; }
+  .hero p {
+    font-size: 1.05rem; line-height: 1.75;
+    color: var(--muted);
+    max-width: 460px;
+    margin-bottom: 36px;
+  }
+  .hero-btns { display: flex; gap: 14px; flex-wrap: wrap; }
+  .btn-primary {
+    background: var(--rose);
+    color: var(--white);
+    padding: 14px 32px;
+    border-radius: 50px;
+    font-weight: 600; font-size: 0.95rem;
+    text-decoration: none;
+    display: inline-flex; align-items: center; gap: 8px;
+    box-shadow: 0 6px 24px rgba(232,66,106,0.35);
+    transition: background 0.2s, transform 0.2s, box-shadow 0.2s;
+  }
+  .btn-primary:hover { background: var(--rose-dark); transform: translateY(-2px); box-shadow: 0 10px 30px rgba(232,66,106,0.4); }
+  .btn-outline {
+    background: transparent;
+    color: var(--rose);
+    padding: 14px 28px;
+    border-radius: 50px;
+    border: 2px solid var(--rose);
+    font-weight: 600; font-size: 0.95rem;
+    text-decoration: none;
+    display: inline-flex; align-items: center; gap: 8px;
+    transition: all 0.2s;
+  }
+  .btn-outline:hover { background: var(--rose); color: var(--white); }
+  .hero-stats {
+    display: flex; gap: 32px; margin-top: 40px; flex-wrap: wrap;
+  }
+  .stat { display: flex; flex-direction: column; }
+  .stat-num {
+    font-family: 'Playfair Display', serif;
+    font-size: 2rem; font-weight: 900;
+    color: var(--rose);
+    line-height: 1;
+  }
+  .stat-lbl { font-size: 0.8rem; color: var(--muted); font-weight: 500; margin-top: 4px; }
+
+  .hero-img-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 16px;
+    width: 100%;
+    max-width: 520px;
+    position: relative;
+  }
+  .hero-img-item {
+    border-radius: 20px;
+    overflow: hidden;
+    box-shadow: var(--shadow);
+    transition: transform 0.3s;
+    height: 180px;
+  }
+  .hero-img-item:hover { transform: scale(1.03); }
+  .hero-img-item img {
+    width: 100%; height: 100%;
+    object-fit: cover;
+    display: block;
+  }
+  .hero-img-item:nth-child(even) { transform: translateY(20px); }
+  @keyframes float { 0%,100%{transform:translateY(0)} 50%{transform:translateY(-8px)} }
+
+  /* ───── SECTION COMMON ───── */
+  section { padding: 90px 5%; }
+  .section-tag {
+    display: inline-block;
+    background: var(--blush);
+    color: var(--rose);
+    font-size: 0.75rem; font-weight: 700;
+    letter-spacing: 1.2px; text-transform: uppercase;
+    padding: 5px 14px; border-radius: 50px;
+    margin-bottom: 14px;
+  }
+  .section-title {
+    font-family: 'Playfair Display', serif;
+    font-size: clamp(1.8rem, 3.5vw, 2.8rem);
+    font-weight: 900; color: var(--dark);
+    line-height: 1.2; margin-bottom: 16px;
+  }
+  .section-sub { color: var(--muted); font-size: 1rem; line-height: 1.7; max-width: 580px; }
+
+  /* ───── ROOMS ───── */
+  #rooms { background: var(--white); }
+  .rooms-header { text-align: center; margin-bottom: 54px; }
+  .rooms-header .section-sub { margin: 0 auto; }
+  .rooms-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+    gap: 28px;
+    max-width: 1200px; margin: 0 auto;
+  }
+  .room-card:hover { transform: translateY(-8px); box-shadow: var(--shadow-lg); }
+  .room-card {
+    border-radius: 24px;
+    overflow: hidden;
+    background: var(--white);
+    box-shadow: var(--shadow);
+    border: 1px solid rgba(0,0,0,0.03);
+    transition: all 0.4s cubic-bezier(0.165, 0.84, 0.44, 1);
+    display: flex; flex-direction: column;
+  }
+  .room-img {
+    position: relative; height: 210px; overflow: hidden;
+  }
+  .room-img img {
+    width: 100%; height: 100%;
+    object-fit: cover;
+    transition: transform 0.4s;
+  }
+  .room-card:hover .room-img img { transform: scale(1.07); }
+  .room-tag {
+    position: absolute; top: 14px; left: 14px;
+    background: var(--rose);
+    color: var(--white);
+    font-size: 0.72rem; font-weight: 700;
+    letter-spacing: 0.8px; text-transform: uppercase;
+    padding: 4px 12px; border-radius: 50px;
+  }
+  .room-body { padding: 22px 20px; flex: 1; display: flex; flex-direction: column; }
+  .room-name {
+    font-family: 'Playfair Display', serif;
+    font-size: 1.25rem; font-weight: 700;
+    color: var(--dark); margin-bottom: 8px;
+  }
+  .room-desc { font-size: 0.85rem; color: var(--muted); line-height: 1.6; margin-bottom: 18px; }
+  .room-features {
+    display: flex; flex-wrap: wrap; gap: 7px;
+    margin-bottom: 20px;
+  }
+  .room-feat {
+    background: var(--blush); color: var(--rose);
+    font-size: 0.74rem; font-weight: 600;
+    padding: 4px 10px; border-radius: 50px;
+  }
+  .room-price {
+    display: flex; align-items: baseline; gap: 4px;
+    margin-bottom: 18px;
+  }
+  .price-num {
+    font-family: 'Playfair Display', serif;
+    font-size: 1.6rem; font-weight: 900; color: var(--rose);
+  }
+  .price-unit { font-size: 0.8rem; color: var(--muted); font-weight: 500; }
+  .room-book {
+    display: block; text-align: center;
+    background: var(--rose);
+    color: var(--white);
+    padding: 12px; border-radius: 12px;
+    font-weight: 600; font-size: 0.9rem;
+    text-decoration: none;
+    margin-top: auto;
+    transition: background 0.2s;
+  }
+  .room-book:hover { background: var(--rose-dark); }
+
+  /* ───── AMENITIES ───── */
+  #amenities {
+    background: linear-gradient(135deg, #0f172a 0%, #1e3a5f 100%);
+    position: relative; overflow: hidden;
+  }
+  #amenities::before {
+    content: '';
+    position: absolute; top: 0; left: 0; right: 0; bottom: 0;
+    background: url("data:image/svg+xml,%3Csvg width='60' height='60' viewBox='0 0 60 60' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='none' fill-rule='evenodd'%3E%3Cg fill='%232563eb' fill-opacity='0.06'%3E%3Ccircle cx='30' cy='30' r='2'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E");
+  }
+  .amenities-header { text-align: center; margin-bottom: 56px; position: relative; }
+  .amenities-header .section-tag { background: rgba(232,66,106,0.2); }
+  .amenities-header .section-title { color: var(--white); }
+  .amenities-header .section-sub { color: rgba(255,255,255,0.55); margin: 0 auto; }
+  .amenities-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    gap: 22px;
+    max-width: 1100px; margin: 0 auto;
+    position: relative;
+  }
+  .amenity-card {
+    background: rgba(255,255,255,0.05);
+    border: 1px solid rgba(255,255,255,0.08);
+    border-radius: 18px;
+    padding: 28px 22px;
+    text-align: center;
+    transition: background 0.3s, transform 0.3s;
+    cursor: default;
+  }
+  .amenity-card:hover {
+    background: rgba(37,99,235,0.15);
+    border-color: rgba(37,99,235,0.35);
+    transform: translateY(-4px);
+  }
+  .amenity-icon {
+    width: 58px; height: 58px;
+    background: rgba(37,99,235,0.18);
+    border-radius: 16px;
+    display: flex; align-items: center; justify-content: center;
+    margin: 0 auto 16px;
+    font-size: 1.5rem; color: var(--rose-light);
+    transition: background 0.3s;
+  }
+  .amenity-card:hover .amenity-icon { background: var(--rose); color: var(--white); }
+  .amenity-name {
+    font-size: 0.9rem; font-weight: 600;
+    color: var(--white);
+    line-height: 1.4;
+  }
+  .amenity-desc {
+    font-size: 0.78rem; color: rgba(255,255,255,0.45);
+    margin-top: 6px;
+  }
+
+  /* ───── GALLERY ───── */
+  #gallery { background: var(--cream); }
+  .gallery-header { text-align: center; margin-bottom: 44px; }
+  .gallery-header .section-sub { margin: 0 auto; }
+  .gallery-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    grid-template-rows: 220px 220px;
+    gap: 16px;
+    max-width: 1100px; margin: 0 auto;
+  }
+  .gallery-item {
+    border-radius: 18px; overflow: hidden;
+    position: relative;
+  }
+  .gallery-item:first-child { grid-row: span 2; }
+  .gallery-item img {
+    width: 100%; height: 100%;
+    object-fit: cover;
+    transition: transform 0.4s;
+  }
+  .gallery-item:hover img { transform: scale(1.06); }
+  .gallery-item::after {
+    content: '';
+    position: absolute; inset: 0;
+    background: rgba(232,66,106,0);
+    transition: background 0.3s;
+  }
+  .gallery-item:hover::after { background: rgba(232,66,106,0.12); }
+
+  /* ───── CONTACT / MAP ───── */
+  #contact {
+    background: var(--white);
+  }
+  .contact-inner {
+    max-width: 1100px; margin: 0 auto;
+    display: grid; grid-template-columns: 1fr 1fr;
+    gap: 60px;
+  }
+  .contact-left .section-sub { margin-bottom: 36px; }
+  .contact-cards { display: flex; flex-direction: column; gap: 16px; }
+  .contact-card {
+    display: flex; align-items: center; gap: 16px;
+    background: var(--blush);
+    border-radius: 16px;
+    padding: 18px 20px;
+  }
+  .contact-card-icon {
+    width: 46px; height: 46px; flex-shrink: 0;
+    background: var(--rose);
+    border-radius: 12px;
+    display: flex; align-items: center; justify-content: center;
+    color: var(--white); font-size: 1.1rem;
+  }
+  .contact-card-text { display: flex; flex-direction: column; }
+  .contact-card-lbl { font-size: 0.74rem; color: var(--muted); font-weight: 600; letter-spacing: 0.5px; text-transform: uppercase; }
+  .contact-card-val { font-size: 0.95rem; font-weight: 600; color: var(--dark); margin-top: 2px; }
+  .contact-card-val a { color: var(--rose); text-decoration: none; }
+  .contact-card-val a:hover { text-decoration: underline; }
+  .wa-btn {
+    display: inline-flex; align-items: center; gap: 10px;
+    background: #25D366;
+    color: var(--white);
+    padding: 13px 26px;
+    border-radius: 50px;
+    font-weight: 600; font-size: 0.92rem;
+    text-decoration: none;
+    margin-top: 22px;
+    box-shadow: 0 4px 18px rgba(37,211,102,0.3);
+    transition: background 0.2s, transform 0.2s;
+  }
+  .wa-btn:hover { background: #1ebe5d; transform: translateY(-2px); }
+  .map-wrap {
+    border-radius: 24px;
+    overflow: hidden;
+    box-shadow: var(--shadow-lg);
+    background: var(--white);
+    padding: 10px;
+    height: 100%;
+    min-height: 450px;
+  }
+  .map-wrap iframe { width: 100%; height: 100%; border-radius: 16px; border: none; }
+
+  /* ───── FOOTER ───── */
+  footer {
+    background: #0f172a;
+    color: rgba(255,255,255,0.6);
+    text-align: center;
+    padding: 32px 5%;
+    font-size: 0.85rem;
+  }
+  footer strong { color: var(--rose-light); }
+  footer a { color: var(--gold-light); text-decoration: none; }
+
+  /* ───── RESPONSIVE ───── */
+
+  /* Large tablets / small laptops */
+  @media (max-width: 1100px) {
+    .hero-inner { gap: 40px; }
+    .amenities-grid { grid-template-columns: repeat(3, 1fr); }
+    .gallery-grid { grid-template-columns: repeat(3, 1fr); grid-template-rows: 200px 200px; }
+  }
+
+  /* Tablet / landscape mobile */
+  @media (max-width: 900px) {
+    .hero { min-height: auto; padding-top: 120px; }
+    .hero-inner { grid-template-columns: 1fr; gap: 36px; text-align: center; }
+    .hero-content { display: flex; flex-direction: column; align-items: center; }
+    .hero p { margin-left: auto; margin-right: auto; }
+    .hero-stats { justify-content: center; }
+    .hero-btns { justify-content: center; }
+    .hero-img-grid { margin: 0 auto; max-width: 420px; }
+    .contact-inner { grid-template-columns: 1fr; gap: 36px; }
+    .map-wrap { min-height: 340px; }
+    .gallery-grid {
+      grid-template-columns: repeat(2, 1fr);
+      grid-template-rows: repeat(3, 200px);
+      padding: 0 10px;
+    }
+    .gallery-item:first-child { grid-row: span 1; }
+    .nav-links { display: none; }
+    .hamburger { display: block; }
+    .rooms-grid { grid-template-columns: repeat(2, 1fr); }
+    .amenities-grid { grid-template-columns: repeat(3, 1fr); }
+  }
+
+  /* Portrait mobile */
+  @media (max-width: 600px) {
+    section { padding: 60px 5%; }
+    .hero { padding-top: 100px; }
+    .hero h1 { font-size: 2rem; }
+    .hero p { font-size: 0.95rem; }
+    .hero-img-grid { grid-template-columns: 1fr 1fr; gap: 10px; max-width: 100%; }
+    .hero-img-item { height: 130px; }
+    .hero-img-item:nth-child(even) { transform: translateY(12px); }
+    .hero-stats { gap: 20px; }
+    .stat-num { font-size: 1.5rem; }
+    .hero-btns { flex-direction: column; align-items: center; gap: 10px; }
+    .btn-primary, .btn-outline { width: 100%; max-width: 280px; justify-content: center; }
+    .rooms-grid { grid-template-columns: 1fr; }
+    .amenities-grid { grid-template-columns: repeat(2, 1fr); gap: 14px; }
+    .gallery-grid {
+      grid-template-columns: 1fr;
+      grid-template-rows: auto;
+      gap: 12px;
+    }
+    .gallery-item { height: 200px; }
+    .gallery-item:first-child { grid-row: span 1; }
+    .contact-inner { gap: 28px; }
+    .contact-card { padding: 14px; }
+    .map-wrap { min-height: 280px; }
+    .section-title { font-size: 1.7rem; }
+    .float-btns { right: 14px; bottom: 20px; gap: 10px; }
+    .float-btn { width: 48px; height: 48px; font-size: 1.3rem; }
+  }
+
+  /* Small phones */
+  @media (max-width: 400px) {
+    .hero h1 { font-size: 1.75rem; }
+    .amenities-grid { grid-template-columns: 1fr 1fr; gap: 10px; }
+    .amenity-card { padding: 20px 14px; }
+    .amenity-icon { width: 48px; height: 48px; font-size: 1.25rem; }
+    .logo { font-size: 1.25rem; }
+    .hero-badge { font-size: 0.7rem; }
+    .stat-num { font-size: 1.3rem; }
+  }
+
+  /* ───── SCROLL ANIMATIONS ───── */
+  .reveal {
+    opacity: 0;
+    transform: translateY(30px);
+    transition: opacity 0.6s ease, transform 0.6s ease;
+  }
+  .reveal.visible {
+    opacity: 1;
+    transform: translateY(0);
+  }
+</style>
+</head>
+<body>
+
+<!-- ───── FLOATING BUTTONS ───── -->
+<div class="float-btns">
+  <a href="https://wa.me/919740513307?text=Hi%20SLV%20PG%2C%20I%20am%20interested%20in%20booking%20a%20room." class="float-btn float-wa" target="_blank" title="WhatsApp Us">
+    <i class="fab fa-whatsapp"></i>
+  </a>
+  <a href="tel:+919740513307" class="float-btn float-call" title="Call Us">
+    <i class="fas fa-phone"></i>
+  </a>
+</div>
+
+<!-- ───── NAV ───── -->
+<nav id="navbar">
+  <div class="logo">SLV PG <span>for Ladies</span></div>
+  <ul class="nav-links">
+    <li><a href="#rooms">Rooms</a></li>
+    <li><a href="#amenities">Amenities</a></li>
+    <li><a href="#gallery">Gallery</a></li>
+    <li><a href="#contact">Contact</a></li>
+    <li><a href="#contact" class="nav-cta">Book Now</a></li>
+  </ul>
+  <div class="hamburger" onclick="toggleMenu()"><i class="fas fa-bars"></i></div>
+</nav>
+<div class="mobile-menu" id="mobileMenu">
+  <a href="#rooms" onclick="toggleMenu()">Rooms</a>
+  <a href="#amenities" onclick="toggleMenu()">Amenities</a>
+  <a href="#gallery" onclick="toggleMenu()">Gallery</a>
+  <a href="#contact" onclick="toggleMenu()">Contact</a>
+  <a href="#contact" onclick="toggleMenu()" style="color:var(--rose);font-weight:700;">📞 Book Now</a>
+</div>
+
+<!-- ───── HERO ───── -->
+<section id="home" class="hero">
+  <div class="hero-inner">
+    <div class="hero-content reveal">
+      <div class="hero-badge"><i class="fas fa-venus"></i> Exclusively For Ladies</div>
+      <h1>Your Home Away<br>From <span class="accent">Home</span> in the City</h1>
+      <p>Experience safe, comfortable, and affordable living at SLV PG – designed exclusively for women who deserve the best. Quality food, cozy rooms, and a caring community.</p>
+      <div class="hero-btns">
+        <a href="#rooms" class="btn-primary"><i class="fas fa-door-open"></i> View Rooms</a>
+        <a href="https://wa.me/919740513307?text=Hi%20SLV%20PG%2C%20I%20want%20to%20book%20a%20room." class="btn-outline" target="_blank"><i class="fab fa-whatsapp"></i> WhatsApp</a>
+      </div>
+      <div class="hero-stats">
+        <div class="stat"><span class="stat-num">4</span><span class="stat-lbl">Room Types</span></div>
+        <div class="stat"><span class="stat-num">3×</span><span class="stat-lbl">Meals Daily</span></div>
+        <div class="stat"><span class="stat-num">24/7</span><span class="stat-lbl">Hot Water</span></div>
+        <div class="stat"><span class="stat-num">100%</span><span class="stat-lbl">Ladies Only</span></div>
+      </div>
+    </div>
+
+    <div class="hero-img-grid reveal">
+      <div class="hero-img-item">
+        <img src="images/WhatsApp%20Image%202026-03-22%20at%2012.21.26%20PM%20(1).jpeg" alt="SLV PG Entrance">
+      </div>
+      <div class="hero-img-item">
+        <img src="images/WhatsApp%20Image%202026-03-22%20at%2012.21.31%20PM.jpeg" alt="Modern PG Room">
+      </div>
+      <div class="hero-img-item">
+        <img src="images/WhatsApp%20Image%202026-03-22%20at%2012.21.35%20PM.jpeg" alt="Safe Living">
+      </div>
+      <div class="hero-img-item">
+        <img src="images/room.jpeg" alt="Comfortable Stay">
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ───── ROOMS ───── -->
+<section id="rooms">
+  <div class="rooms-header reveal">
+    <div class="section-tag">Our Rooms</div>
+    <h2 class="section-title">Pick Your Perfect Space</h2>
+    <p class="section-sub">From solo private rooms to budget-friendly sharing – all rooms are clean, well-ventilated, and come with **Attached Bathrooms, LED TV, and AC / Non-AC** options.</p>
+  </div>
+
+  <div class="rooms-grid">
+    <!-- Single -->
+    <div class="room-card reveal">
+      <div class="room-img">
+        <img src="images/1sharing.jpeg" alt="Single Sharing Room">
+        <span class="room-tag">Single</span>
+      </div>
+      <div class="room-body">
+        <div class="room-name">Single Occupancy</div>
+        <div class="room-desc">Your own private room with full privacy – perfect for working professionals who value personal space.</div>
+        <div class="room-features">
+          <span class="room-feat">Attached Bath</span>
+          <span class="room-feat">LED TV</span>
+          <span class="room-feat">AC / Non-AC</span>
+          <span class="room-feat">Study Table & Wardrobe</span>
+          <span class="room-feat">3 Times Delicious Food</span>
+        </div>
+        <div class="room-price">
+          <span class="price-num">₹20,000</span>
+          <span class="price-unit">/ month</span>
+        </div>
+        <a href="https://wa.me/919740513307?text=Hi%2C%20I%20want%20to%20book%20Single%20room%20at%20SLV%20PG." class="room-book" target="_blank">📩 Book This Room</a>
+      </div>
+    </div>
+
+    <!-- Double -->
+    <div class="room-card reveal">
+      <div class="room-img">
+        <img src="images/2sharing.jpeg" alt="Double Sharing Room">
+        <span class="room-tag">Double</span>
+      </div>
+      <div class="room-body">
+        <div class="room-name">Double Sharing</div>
+        <div class="room-desc">Cozy room shared between two occupants with individual beds and dedicated storage for each.</div>
+        <div class="room-features">
+          <span class="room-feat">Attached Bath</span>
+          <span class="room-feat">LED TV</span>
+          <span class="room-feat">AC / Non-AC</span>
+          <span class="room-feat">Study Table & Wardrobe</span>
+          <span class="room-feat">3 Times Delicious Food</span>
+        </div>
+        <div class="room-price">
+          <span class="price-num">₹14,000</span>
+          <span class="price-unit">/ month</span>
+        </div>
+        <a href="https://wa.me/919740513307?text=Hi%2C%20I%20want%20to%20book%20Double%20sharing%20room%20at%20SLV%20PG." class="room-book" target="_blank">📩 Book This Room</a>
+      </div>
+    </div>
+
+    <!-- Triple -->
+    <div class="room-card reveal">
+      <div class="room-img">
+        <img src="images/3sharing.jpeg" alt="Triple Sharing Room">
+        <span class="room-tag">Triple</span>
+      </div>
+      <div class="room-body">
+        <div class="room-name">Triple Sharing</div>
+        <div class="room-desc">Spacious room for three with plenty of storage space, great for students and interns on a budget.</div>
+        <div class="room-features">
+          <span class="room-feat">Attached Bath</span>
+          <span class="room-feat">LED TV</span>
+          <span class="room-feat">AC / Non-AC</span>
+          <span class="room-feat">Study Table & Wardrobe</span>
+          <span class="room-feat">3 Times Delicious Food</span>
+        </div>
+        <div class="room-price">
+          <span class="price-num">₹13,000</span>
+          <span class="price-unit">/ month</span>
+        </div>
+        <a href="https://wa.me/919740513307?text=Hi%2C%20I%20want%20to%20book%20Triple%20sharing%20room%20at%20SLV%20PG." class="room-book" target="_blank">📩 Book This Room</a>
+      </div>
+    </div>
+
+    <!-- Quad -->
+    <div class="room-card reveal">
+      <div class="room-img">
+        <img src="images/foursharing.jpeg" alt="Four Sharing Room">
+        <span class="room-tag">Four Sharing</span>
+      </div>
+      <div class="room-body">
+        <div class="room-name">4-Bed Sharing</div>
+        <div class="room-desc">Most affordable option – share a large bright room with three others. Great for first-time PG residents.</div>
+        <div class="room-features">
+          <span class="room-feat">Attached Bath</span>
+          <span class="room-feat">LED TV</span>
+          <span class="room-feat">AC / Non-AC</span>
+          <span class="room-feat">Study Table & Wardrobe</span>
+          <span class="room-feat">3 Times Delicious Food</span>
+        </div>
+        <div class="room-price">
+          <span class="price-num">₹9,000</span>
+          <span class="price-unit">/ month</span>
+        </div>
+        <a href="https://wa.me/919740513307?text=Hi%2C%20I%20want%20to%20book%204-sharing%20room%20at%20SLV%20PG." class="room-book" target="_blank">📩 Book This Room</a>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ───── AMENITIES ───── -->
+<section id="amenities">
+  <div class="amenities-header reveal">
+    <h2 class="section-title">Why Choose Us – All Amenities Included</h2>
+    <p class="section-sub" style="max-width: none;">Everything you need for a comfortable and safe stay is taken care of at SLV PG.</p>
+  </div>
+
+  <div class="amenities-grid">
+    <div class="amenity-card reveal">
+      <div class="amenity-icon"><i class="fas fa-utensils"></i></div>
+      <div class="amenity-name">3 Times Food</div>
+      <div class="amenity-desc">Breakfast, Lunch & Dinner</div>
+    </div>
+    <div class="amenity-card reveal">
+      <div class="amenity-icon"><i class="fas fa-wifi"></i></div>
+      <div class="amenity-name">High-Speed WiFi</div>
+      <div class="amenity-desc">Unlimited Internet 24/7</div>
+    </div>
+    <div class="amenity-card reveal">
+      <div class="amenity-icon"><i class="fas fa-tshirt"></i></div>
+      <div class="amenity-name">Washing Machine</div>
+      <div class="amenity-desc">Available for all residents</div>
+    </div>
+    <div class="amenity-card reveal">
+      <div class="amenity-icon"><i class="fas fa-bolt"></i></div>
+      <div class="amenity-name">Power Backup</div>
+      <div class="amenity-desc">24/7 uninterrupted power</div>
+    </div>
+    <div class="amenity-card reveal">
+      <div class="amenity-icon"><i class="fas fa-broom"></i></div>
+      <div class="amenity-name">Room Cleaning</div>
+      <div class="amenity-desc">Daily housekeeping service</div>
+    </div>
+    <div class="amenity-card reveal">
+      <div class="amenity-icon"><i class="fas fa-shield-alt"></i></div>
+      <div class="amenity-name">24/7 Security</div>
+      <div class="amenity-desc">CCTV & security personnel</div>
+    </div>
+    <div class="amenity-card reveal">
+      <div class="amenity-icon"><i class="fas fa-hot-tub"></i></div>
+      <div class="amenity-name">24hr Hot Water</div>
+      <div class="amenity-desc">Solar + geyser water system</div>
+    </div>
+    <div class="amenity-card reveal">
+      <div class="amenity-icon"><i class="fas fa-parking"></i></div>
+      <div class="amenity-name">Two-Wheeler Parking</div>
+      <div class="amenity-desc">Safe covered parking space</div>
+    </div>
+    <div class="amenity-card reveal">
+      <div class="amenity-icon"><i class="fas fa-couch"></i></div>
+      <div class="amenity-name">Common Lounge</div>
+      <div class="amenity-desc">Relax & socialise area</div>
+    </div>
+    <div class="amenity-card reveal">
+      <div class="amenity-icon"><i class="fas fa-venus"></i></div>
+      <div class="amenity-name">Ladies Only</div>
+      <div class="amenity-desc">Safe & secure environment</div>
+    </div>
+    <div class="amenity-card reveal">
+      <div class="amenity-icon"><i class="fas fa-gamepad"></i></div>
+      <div class="amenity-name">Play Area</div>
+      <div class="amenity-desc">Fun & recreational space</div>
+    </div>
+    <div class="amenity-card reveal">
+      <div class="amenity-icon"><i class="fas fa-laptop"></i></div>
+      <div class="amenity-name">Workspace</div>
+      <div class="amenity-desc">Dedicated study & work zone</div>
+    </div>
+  </div>
+</section>
+
+<!-- ───── GALLERY ───── -->
+<section id="gallery">
+  <div class="gallery-header reveal">
+    <div class="section-tag">Gallery</div>
+    <h2 class="section-title">Take a Look Inside</h2>
+    <p class="section-sub">See the clean, comfortable spaces we've crafted for our ladies.</p>
+  </div>
+  <div class="gallery-grid">
+    <div class="gallery-item reveal">
+      <img src="images/hall.jpeg" alt="PG Living Area">
+    </div>
+    <div class="gallery-item reveal">
+      <img src="images/space.jpeg" alt="Ample Space">
+    </div>
+    <div class="gallery-item reveal">
+      <img src="images/bathroom.jpeg" alt="Clean Bathroom">
+    </div>
+    <div class="gallery-item reveal">
+      <img src="images/room.jpeg" alt="Cozy Room">
+    </div>
+    <div class="gallery-item reveal">
+      <img src="images/1sharing.jpeg" alt="Private Space">
+    </div>
+  </div>
+</section>
+
+<!-- ───── CONTACT ───── -->
+<section id="contact">
+  <div class="contact-inner">
+    <div class="contact-left reveal">
+      <div class="section-tag">Get In Touch</div>
+      <h2 class="section-title">Visit or Call Us Today</h2>
+      <p class="section-sub">We'd love to show you around. Give us a call, WhatsApp us, or just walk in – we're always happy to help you find your perfect room.</p>
+
+      <div class="contact-cards">
+        <div class="contact-card">
+          <div class="contact-card-icon"><i class="fas fa-phone"></i></div>
+          <div class="contact-card-text">
+            <span class="contact-card-lbl">Phone 1</span>
+            <span class="contact-card-val"><a href="tel:+919740513307">+91 97405 13307</a></span>
+          </div>
+        </div>
+        <div class="contact-card">
+          <div class="contact-card-icon"><i class="fas fa-phone"></i></div>
+          <div class="contact-card-text">
+            <span class="contact-card-lbl">Phone 2</span>
+            <span class="contact-card-val"><a href="tel:+919880487413">+91 98804 87413</a></span>
+          </div>
+        </div>
+        <div class="contact-card">
+          <div class="contact-card-icon"><i class="fas fa-map-marker-alt"></i></div>
+          <div class="contact-card-text">
+            <span class="contact-card-lbl">Location</span>
+            <span class="contact-card-val">Bengaluru, Karnataka</span>
+          </div>
+        </div>
+        <div class="contact-card">
+          <div class="contact-card-icon"><i class="fas fa-clock"></i></div>
+          <div class="contact-card-text">
+            <span class="contact-card-lbl">Visiting Hours</span>
+            <span class="contact-card-val">9:00 AM – 8:00 PM (Daily)</span>
+          </div>
+        </div>
+      </div>
+
+      <a href="https://wa.me/919740513307?text=Hi%20SLV%20PG%2C%20I%20want%20to%20enquire%20about%20rooms." class="wa-btn" target="_blank">
+        <i class="fab fa-whatsapp"></i> Chat on WhatsApp
+      </a>
+    </div>
+
+    <div class="map-wrap reveal">
+      <iframe src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d971.9247375823505!2d77.57356267422436!3d12.991096980327333!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x3bae163d188710cd%3A0xd347d1e0b0c3c88f!2sVishal%20Super%20Luxury%20Ladies%20PG!5e0!3m2!1sen!2sin!4v1774164499188!5m2!1sen!2sin" width="600" height="450" style="border:0;" allowfullscreen="" loading="lazy" referrerpolicy="no-referrer-when-downgrade"></iframe>
+    </div>
+  </div>
+</section>
+
+<!-- ───── FOOTER ───── -->
+<footer>
+  <p>© 2026 <strong>SLV PG – Ladies Only</strong> &nbsp;|&nbsp; Bengaluru, Karnataka &nbsp;|&nbsp;
+    <a href="tel:+919740513307">97405 13307</a> &nbsp;/&nbsp;
+    <a href="tel:+919880487413">98804 87413</a>
+  </p>
+  <p style="margin-top:8px; font-size:0.78rem;">Designed with ❤️ for the comfort and safety of every lady resident</p>
+</footer>
+
+<script>
+  // Nav scroll
+  window.addEventListener('scroll', () => {
+    document.getElementById('navbar').classList.toggle('scrolled', window.scrollY > 40);
+  });
+
+  // Mobile menu
+  function toggleMenu() {
+    document.getElementById('mobileMenu').classList.toggle('open');
+  }
+  document.addEventListener('click', e => {
+    const menu = document.getElementById('mobileMenu');
+    const hamburger = document.querySelector('.hamburger');
+    if (!menu.contains(e.target) && !hamburger.contains(e.target)) {
+      menu.classList.remove('open');
+    }
+  });
+
+  // Reveal on scroll
+  const reveals = document.querySelectorAll('.reveal');
+  const observer = new IntersectionObserver(entries => {
+    entries.forEach((entry, i) => {
+      if (entry.isIntersecting) {
+        setTimeout(() => entry.target.classList.add('visible'), i * 60);
+        observer.unobserve(entry.target);
+      }
+    });
+  }, { threshold: 0.1 });
+  reveals.forEach(el => observer.observe(el));
+</script>
+</body>
+</html>
